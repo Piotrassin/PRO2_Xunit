@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Library.Entities;
@@ -67,7 +68,7 @@ namespace XUnitTestProject1.Controllers
         [Fact]
         public async Task GetUser_200Ok()
         {
-            var httpResponse = await _client.GetAsync($"{_client.BaseAddress.AbsoluteUri}api/user/1");
+            var httpResponse = await _client.GetAsync($"{_client.BaseAddress.AbsoluteUri}api/users/1");
 
             httpResponse.EnsureSuccessStatusCode();
             var content = await httpResponse.Content.ReadAsStringAsync();
@@ -75,6 +76,34 @@ namespace XUnitTestProject1.Controllers
 
             Assert.True(users.IdUser == 1);
             Assert.True(users.Login == "jd");
+        }
+
+        [Fact]
+        public async Task AddUser200_Ok()
+        {
+            var newUser = new User {
+                IdUser = 2,
+                Email = "abc@pja.edu.pl",
+                Name = "Adam",
+                Surname = "BellaCiao",
+                Login = "pizza",
+                Password = "BellaCiaoCiaoCiao"
+            };
+
+
+            var userToJson = JsonConvert.SerializeObject(newUser, Formatting.Indented);
+            var httpContent = new StringContent(userToJson);
+
+            var buffer = System.Text.Encoding.UTF8.GetBytes(userToJson);
+            var byteContent = new ByteArrayContent(buffer);
+            byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var httpResponse = _client.PostAsync($"{_client.BaseAddress.AbsoluteUri}api/users", byteContent).Result;
+
+            httpResponse.EnsureSuccessStatusCode();
+            var content = await httpResponse.Content.ReadAsStringAsync();
+
+
+
         }
     }
 }
