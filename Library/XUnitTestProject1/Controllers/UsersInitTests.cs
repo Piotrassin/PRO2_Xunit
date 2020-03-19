@@ -79,7 +79,7 @@ namespace XUnitTestProject1.Controllers
         }
 
         [Fact]
-        public async Task AddUser200_Ok()
+        public async Task AddUser_200Ok()
         {
             var newUser = new User {
                 IdUser = 2,
@@ -90,8 +90,8 @@ namespace XUnitTestProject1.Controllers
                 Password = "BellaCiaoCiaoCiao"
             };
 
-            var asda = new StringContent(JsonConvert.SerializeObject(newUser), Encoding.UTF8, "application/json");
-            var httpResponse = _client.PostAsync($"{_client.BaseAddress.AbsoluteUri}api/users", asda).Result;
+            var userJSON = new StringContent(JsonConvert.SerializeObject(newUser), Encoding.UTF8, "application/json");
+            var httpResponse = _client.PostAsync($"{_client.BaseAddress.AbsoluteUri}api/users", userJSON).Result;
 
             httpResponse.EnsureSuccessStatusCode();
 
